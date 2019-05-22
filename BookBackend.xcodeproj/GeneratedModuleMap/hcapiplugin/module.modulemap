@@ -1,4 +1,0 @@
-module hcapiplugin {
-    umbrella "/Users/david/Documents/Development/BookBackend/.build/checkouts/omr-agentcore/src/hcapiplugin/include"
-    export *
-}

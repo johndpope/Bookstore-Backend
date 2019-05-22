@@ -9,5 +9,6 @@ struct Book: Codable {
 }
 
 extension Book: Model {
+    //Set the table name to something we know for SwiftKuery
     static let tableName = "BookTable"
 }
