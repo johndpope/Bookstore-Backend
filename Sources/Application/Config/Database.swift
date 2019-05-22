@@ -22,6 +22,29 @@ extension App {
         }
     }
     
+    func putInDatabase(table: BookTable, id: Int, book: Book, response: RouterResponse, completion: @escaping () -> Void) {
+        
+        App.pool.getConnection() { connection, error in
+            guard let connection = connection else {
+                Log.error("Error connection: \(error?.localizedDescription ?? "Unknown Error")")
+                let _ = response.send(status: .internalServerError)
+                return
+            }
+            
+            let updateQuery = Update(table, set: [(table.id, book.id), (table.title, book.title), (table.inStock, book.inStock), (table.price, book.price)]).where(table.id == id)
+            
+            connection.execute(query: updateQuery) { updateResult in
+                guard updateResult.success else {
+                    Log.error("Error executing query: \(updateResult.asError?.localizedDescription ?? "Unknown Error")")
+                    return
+                }
+                
+                response.send(book)
+                return
+            }
+        }
+    }
+    
     func saveToDatabase(table: BookTable, book: Book, response: RouterResponse, completion: @escaping () -> Void) {
         let rows = [[book.id, book.title, book.inStock, book.price]]
         
