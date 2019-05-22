@@ -104,6 +104,64 @@ extension App {
             
         }
     }
+    
+    func getSingleFromDatabase(table: BookTable, id: Int32, response: RouterResponse, completion: () -> Void) {
+        App.pool.getConnection() { connection, error in
+            guard let connection = connection else {
+                Log.error("Error connecting: \(error?.localizedDescription ?? "Unknown Error")")
+                return
+            }
+            
+            let selectSingleQuery = Select(from: table).where(table.id == "\(id)")
+            
+            connection.execute(query: selectSingleQuery) { selectSingleResult in
+                guard let resultSet = selectSingleResult.asResultSet else {
+                    Log.error("Error connection: \(error?.localizedDescription ?? "Uknown Error")")
+                    let _ = response.send(status: .internalServerError)
+                    return
+                }
+                
+               var books = [Book]()
+                
+                resultSet.forEach() { row, error in
+                    guard let row = row else {
+                        if let error = error {
+                            Log.error("Error getting row: \(error.localizedDescription)")
+                            let _ = response.send(status: .internalServerError)
+                            return
+                        } else {
+                            response.send(books[0])
+                            return
+                        }
+                    }
+                    
+                    guard let id = row[0] as? Int32 else {
+                        Log.error("Unable to decode id")
+                        let _ = response.send(status: .internalServerError)
+                        return
+                    }
+                    guard let title = row[1] as? String else {
+                        Log.error("Unable to decode title")
+                        let _ = response.send(status: .internalServerError)
+                        return
+                    }
+                    guard let inStock = row[2] as? Bool else {
+                        Log.error("Unable to decode inStock")
+                        let _ = response.send(status: .internalServerError)
+                        return
+                    }
+                    guard let price = row[3] as? Float else {
+                        Log.error("Unable to decode price")
+                        let _ = response.send(status: .internalServerError)
+                        return
+                    }
+                    
+                    books.append(Book(id: Int(id), title: title, inStock: inStock, price: price))
+                    
+                }
+            }
+        }
+    }
 }
 
 

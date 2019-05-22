@@ -19,8 +19,19 @@ func initializeUserRoutes(app: App) {
     }
     
     //Get single book
-    router.get("/books:id") { request, response, next in
-        next()
+    router.get("/books/:id") { request, response, next in
+        
+        guard let idString = request.parameters["id"] else {
+            return
+        }
+        
+        guard let id = Int32(idString) else {
+            return
+        }
+        
+        app.getSingleFromDatabase(table: bookTable, id: id, response: response) {
+            next()
+        }
     }
     
     //So users can sell their own books
