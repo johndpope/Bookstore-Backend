@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   type = "1"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Sources/Application/Routes/UserRoutes.swift"
+            timestampString = "580206033.940825"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "91"
+            endingLineNumber = "91"
+            landmarkName = "getAllFromDatabase(table:response:completion:)"
+            landmarkType = "9">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (SwiftKuery.QueryResult) -&gt; () in closure #1 (Swift.Optional&lt;SwiftKuery.ConnectionPoolConnection&gt;, Swift.Optional&lt;SwiftKuery.QueryError&gt;) -&gt; () in Application.getAllFromDatabase(table: Application.BookTable, response: Kitura.RouterResponse) -&gt; ()"
+                  moduleName = "Application"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/david/Documents/Development/BookBackend/Sources/Application/Routes/UserRoutes.swift"
+                  timestampString = "580166813.5219229"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "88"
+                  endingLineNumber = "88"
+                  offsetFromSymbolStart = "376">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;Swift.Array&lt;Swift.Optional&lt;Any&gt;&gt;&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in closure #1 (SwiftKuery.QueryResult) -&gt; () in closure #1 (Swift.Optional&lt;SwiftKuery.ConnectionPoolConnection&gt;, Swift.Optional&lt;SwiftKuery.QueryError&gt;) -&gt; () in Application.getAllFromDatabase(table: Application.BookTable, response: Kitura.RouterResponse) -&gt; ()"
+                  moduleName = "Application"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/david/Documents/Development/BookBackend/Sources/Application/Routes/UserRoutes.swift"
+                  timestampString = "580166813.524142"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "88"
+                  endingLineNumber = "88"
+                  offsetFromSymbolStart = "406">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Sources/Application/Routes/UserRoutes.swift"
+            timestampString = "580206033.941295"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "84"
+            endingLineNumber = "84"
+            landmarkName = "getAllFromDatabase(table:response:completion:)"
+            landmarkType = "9">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;SwiftKuery.ConnectionPoolConnection&gt;, Swift.Optional&lt;SwiftKuery.QueryError&gt;) -&gt; () in Application.getAllFromDatabase(table: Application.BookTable, response: Kitura.RouterResponse, completion: () -&gt; ()) -&gt; ()"
+                  moduleName = "Application"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/david/Documents/Development/BookBackend/Sources/Application/Routes/UserRoutes.swift"
+                  timestampString = "580168125.3562109"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "84"
+                  endingLineNumber = "84"
+                  offsetFromSymbolStart = "528">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (SwiftKuery.QueryResult) -&gt; () in closure #1 (Swift.Optional&lt;SwiftKuery.ConnectionPoolConnection&gt;, Swift.Optional&lt;SwiftKuery.QueryError&gt;) -&gt; () in Application.getAllFromDatabase(table: Application.BookTable, response: Kitura.RouterResponse, completion: () -&gt; ()) -&gt; ()"
+                  moduleName = "Application"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/david/Documents/Development/BookBackend/Sources/Application/Routes/UserRoutes.swift"
+                  timestampString = "580168125.3582669"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "85"
+                  endingLineNumber = "85"
+                  offsetFromSymbolStart = "217">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>

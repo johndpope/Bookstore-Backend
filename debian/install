@@ -1,0 +1,3 @@
+.build/							usr/src/BookBackend
+terraform/scripts/install.sh	usr/src/BookBackend
+terraform/scripts/start.sh		usr/src/BookBackend
