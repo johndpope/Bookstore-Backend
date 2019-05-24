@@ -7,6 +7,8 @@ import Kitura
 extension App {
     static let pool = PostgreSQLConnection.createPool(host: "localhost", port: 5432, options: [.databaseName("bookstore")], poolOptions: ConnectionPoolOptions(initialCapacity: 10, maxCapacity: 50))
     
+    static let bookTable = BookTable()
+    
     static func createTable() {
         Database.default = Database(App.pool)
         
@@ -22,7 +24,7 @@ extension App {
         }
     }
     
-    func deleteSingleFromDatabase(table: BookTable, id: Int, response: RouterResponse, completion: @escaping () -> Void) {
+    func deleteSingleFromDatabase(id: Int, response: RouterResponse, completion: @escaping () -> Void) {
         
         App.pool.getConnection() { connection, error in
             guard let connection = connection else {
@@ -31,7 +33,7 @@ extension App {
                 return
             }
             
-            let deleteSingleQuery = Delete(from: table).where(table.id == id)
+            let deleteSingleQuery = Delete(from: App.bookTable).where(App.bookTable.id == id)
             
             connection.execute(query: deleteSingleQuery) { deleteSingleResult in
                 guard deleteSingleResult.success else {
@@ -46,7 +48,7 @@ extension App {
         
     }
     
-    func deleteAllFromDatabase(table: BookTable, response: RouterResponse, completion: @escaping () -> Void) {
+    func deleteAllFromDatabase(response: RouterResponse, completion: @escaping () -> Void) {
         App.pool.getConnection() { connection, error in
             guard let connection = connection else {
                 Log.error("Error connecting: \(error?.localizedDescription ?? "Unkown Error")")
@@ -54,7 +56,7 @@ extension App {
                 return
             }
             
-            let deleteAllQuery = Delete(from: table)
+            let deleteAllQuery = Delete(from: App.bookTable)
             
             connection.execute(query: deleteAllQuery) { deleteAllResult in
                 guard deleteAllResult.success else {
@@ -68,7 +70,7 @@ extension App {
         }
     }
     
-    func patchInDatabase(table: BookTable, id: Int, book: OptionalBook, response: RouterResponse, completion: @escaping () -> Void) {
+    func patchInDatabase(id: Int, book: OptionalBook, response: RouterResponse, completion: @escaping () -> Void) {
         App.pool.getConnection() { connection, error in
             guard let connection = connection else {
                 Log.error("Error connection: \(error?.localizedDescription ?? "Unknown Error")")
@@ -78,16 +80,16 @@ extension App {
             var set: [(Column, Any)] = []
             
             if let bookTitle = book.title {
-                set.append((table.title, bookTitle))
+                set.append((App.bookTable.title, bookTitle))
             }
             if let bookInStock = book.inStock {
-                set.append((table.inStock, bookInStock))
+                set.append((App.bookTable.inStock, bookInStock))
             }
             if let bookPrice = book.price {
-                set.append((table.price, bookPrice))
+                set.append((App.bookTable.price, bookPrice))
             }
             
-            let updateQuery = Update(table, set: set).where(table.id == id)
+            let updateQuery = Update(App.bookTable, set: set).where(App.bookTable.id == id)
             
             connection.execute(query: updateQuery) { updateResult in
                 guard updateResult.success else {
@@ -101,7 +103,7 @@ extension App {
         }
     }
     
-    func putInDatabase(table: BookTable, id: Int, book: Book, response: RouterResponse, completion: @escaping () -> Void) {
+    func putInDatabase(id: Int, book: Book, response: RouterResponse, completion: @escaping () -> Void) {
         
         App.pool.getConnection() { connection, error in
             guard let connection = connection else {
@@ -110,7 +112,7 @@ extension App {
                 return
             }
             
-            let updateQuery = Update(table, set: [(table.id, book.id), (table.title, book.title), (table.inStock, book.inStock), (table.price, book.price)]).where(table.id == id)
+            let updateQuery = Update(App.bookTable, set: [(App.bookTable.id, book.id), (App.bookTable.title, book.title), (App.bookTable.inStock, book.inStock), (App.bookTable.price, book.price)]).where(App.bookTable.id == id)
             
             connection.execute(query: updateQuery) { updateResult in
                 guard updateResult.success else {
@@ -124,7 +126,7 @@ extension App {
         }
     }
     
-    func saveToDatabase(table: BookTable, book: Book, response: RouterResponse, completion: @escaping () -> Void) {
+    func saveToDatabase(book: Book, response: RouterResponse, completion: @escaping () -> Void) {
         let rows = [[book.id, book.title, book.inStock, book.price]]
         
         App.pool.getConnection() { connection, error in
@@ -134,7 +136,7 @@ extension App {
                 return
             }
             
-            let insertQuery = Insert(into: table, rows: rows)
+            let insertQuery = Insert(into: App.bookTable, rows: rows)
             
             connection.execute(query: insertQuery) { insertResult in
                 guard insertResult.success else {
@@ -150,14 +152,14 @@ extension App {
         }
     }
     
-    func getAllFromDatabase(table: BookTable, response: RouterResponse, completion: @escaping () -> Void) {
+    func getAllFromDatabase(response: RouterResponse, completion: @escaping () -> Void) {
         App.pool.getConnection() { connection, error in
             guard let connection = connection else {
                 Log.error("Error connection: \(error?.localizedDescription ?? "Unknown Error")")
                 return
             }
             
-            let selectAllQuery = Select(from: table)
+            let selectAllQuery = Select(from: App.bookTable)
             
             connection.execute(query: selectAllQuery) { selectAllResult in
                 guard let resultSet = selectAllResult.asResultSet else {
@@ -208,14 +210,14 @@ extension App {
         }
     }
     
-    func getSingleFromDatabase(table: BookTable, id: Int, response: RouterResponse, completion: () -> Void) {
+    func getSingleFromDatabase(id: Int, response: RouterResponse, completion: () -> Void) {
         App.pool.getConnection() { connection, error in
             guard let connection = connection else {
                 Log.error("Error connecting: \(error?.localizedDescription ?? "Unknown Error")")
                 return
             }
             
-            let selectSingleQuery = Select(from: table).where(table.id == "\(id)")
+            let selectSingleQuery = Select(from: App.bookTable).where(App.bookTable.id == "\(id)")
             
             connection.execute(query: selectSingleQuery) { selectSingleResult in
                 guard let resultSet = selectSingleResult.asResultSet else {

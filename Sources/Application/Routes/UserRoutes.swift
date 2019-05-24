@@ -1,19 +1,13 @@
-import KituraContracts
-import SwiftKueryPostgreSQL
-import SwiftKuery
-import LoggerAPI
 import Kitura
 
 func initializeUserRoutes(app: App) {
     let router = Router()
     
-    let bookTable = BookTable()
-    
     //Get all books
     router.get("/books") { request, response, next in
         
         //Needs to be a closure as this call is asynchronous, only call next() when getAllFromDatabase is complete.
-        app.getAllFromDatabase(table: bookTable, response: response) {
+        app.getAllFromDatabase(response: response) {
             next()
         }
     }
@@ -29,7 +23,7 @@ func initializeUserRoutes(app: App) {
             return
         }
         
-        app.getSingleFromDatabase(table: bookTable, id: id, response: response) {
+        app.getSingleFromDatabase(id: id, response: response) {
             next()
         }
     }
@@ -43,7 +37,7 @@ func initializeUserRoutes(app: App) {
         }
         
         //Needs to be a closure as this call is asynchronous, only call next() when saveToDatabase is complete.
-        app.saveToDatabase(table: bookTable, book: book, response: response) {
+        app.saveToDatabase(book: book, response: response) {
             next()
         }
     }
@@ -63,7 +57,7 @@ func initializeUserRoutes(app: App) {
             return next()
         }
         
-        app.putInDatabase(table: bookTable, id: id, book: book, response: response) {
+        app.putInDatabase(id: id, book: book, response: response) {
             next()
         }
     }
@@ -82,13 +76,13 @@ func initializeUserRoutes(app: App) {
             return next()
         }
         
-        app.patchInDatabase(table: bookTable, id: id, book: book, response: response) {
+        app.patchInDatabase(id: id, book: book, response: response) {
             next()
         }
     }
     
     router.delete("/books") { request, response, next in
-        app.deleteAllFromDatabase(table: bookTable, response: response) {
+        app.deleteAllFromDatabase(response: response) {
             next()
         }
     }
@@ -102,7 +96,7 @@ func initializeUserRoutes(app: App) {
             return
         }
         
-        app.deleteSingleFromDatabase(table: bookTable, id: id, response: response) {
+        app.deleteSingleFromDatabase(id: id, response: response) {
             next()
         }
     }
