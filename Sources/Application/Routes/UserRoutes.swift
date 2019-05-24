@@ -48,7 +48,7 @@ func initializeUserRoutes(app: App) {
         }
     }
     
-    router.put("/books:id") { request, response, next in
+    router.put("/books/:id") { request, response, next in
         
         guard let idString = request.parameters["id"] else {
             return
@@ -68,7 +68,7 @@ func initializeUserRoutes(app: App) {
         }
     }
     
-    router.patch("/books:id") { request, response, next in
+    router.patch("/books/:id") { request, response, next in
         guard let idString = request.parameters["id"] else {
             return
         }
@@ -93,7 +93,7 @@ func initializeUserRoutes(app: App) {
         }
     }
     
-    router.delete("/books:id") { request, response, next in
+    router.delete("/books/:id") { request, response, next in
         guard let idString = request.parameters["id"] else {
             return
         }

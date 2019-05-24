@@ -38,7 +38,7 @@ extension App {
                     Log.error("Error executing query: \(deleteSingleResult.asError?.localizedDescription ?? "Unknown Error")")
                     return
                 }
-                
+                Log.info("Book with id \(id) has been successfully deleted.")
                 response.status(.OK)
                 return
             }
@@ -61,7 +61,7 @@ extension App {
                     Log.error("Error executing query: \(deleteAllResult.asError?.localizedDescription ?? "Unknown Error")")
                     return
                 }
-                
+                Log.info("All books were successfully deleted.")
                 response.status(.OK)
                 return
             }
@@ -161,6 +161,7 @@ extension App {
             
             connection.execute(query: selectAllQuery) { selectAllResult in
                 guard let resultSet = selectAllResult.asResultSet else {
+                    //This error handling is poor, and is outputted when no Books are found. We need to improve this, and in the guides as well.
                     Log.error("Error connection: \(error?.localizedDescription ?? "Uknown Error")")
                     let _ = response.send(status: .internalServerError)
                     return
@@ -179,7 +180,7 @@ extension App {
                         }
                     }
                     
-                    guard let id = row[0] as? Int else {
+                    guard let id = row[0] as? Int32 else {
                         Log.error("Unable to decode id")
                         let _ = response.send(status: .internalServerError)
                         return
@@ -218,6 +219,7 @@ extension App {
             
             connection.execute(query: selectSingleQuery) { selectSingleResult in
                 guard let resultSet = selectSingleResult.asResultSet else {
+                    //This error handling is poor, and is outputted when a Book isn't found. We need to improve this, and in the guides as well.
                     Log.error("Error connection: \(error?.localizedDescription ?? "Uknown Error")")
                     let _ = response.send(status: .internalServerError)
                     return
@@ -232,12 +234,14 @@ extension App {
                             let _ = response.send(status: .internalServerError)
                             return
                         } else {
+                            //This will crash the server if nothing if array is empty.
                             response.send(books[0])
                             return
                         }
                     }
                     
-                    guard let id = row[0] as? Int else {
+                    //Should we be updating the ID as well?
+                    guard let id = row[0] as? Int32 else {
                         Log.error("Unable to decode id")
                         let _ = response.send(status: .internalServerError)
                         return
