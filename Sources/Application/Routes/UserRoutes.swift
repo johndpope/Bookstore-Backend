@@ -25,7 +25,7 @@ func initializeUserRoutes(app: App) {
             return
         }
         
-        guard let id = Int32(idString) else {
+        guard let id = Int(idString) else {
             return
         }
         
@@ -49,11 +49,62 @@ func initializeUserRoutes(app: App) {
     }
     
     router.put("/books:id") { request, response, next in
-        next()
+        
+        guard let idString = request.parameters["id"] else {
+            return
+        }
+        
+        guard let id = Int(idString) else {
+            return
+        }
+        
+        guard let book = try? request.read(as: Book.self) else {
+            let _ = response.send(status: .badRequest)
+            return next()
+        }
+        
+        app.putInDatabase(table: bookTable, id: id, book: book, response: response) {
+            next()
+        }
     }
     
     router.patch("/books:id") { request, response, next in
-        next()
+        guard let idString = request.parameters["id"] else {
+            return
+        }
+        
+        guard let id = Int(idString) else {
+            return
+        }
+        
+        guard let book = try? request.read(as: OptionalBook.self) else {
+            let _ = response.send(status: .badRequest)
+            return next()
+        }
+        
+        app.patchInDatabase(table: bookTable, id: id, book: book, response: response) {
+            next()
+        }
+    }
+    
+    router.delete("/books") { request, response, next in
+        app.deleteAllFromDatabase(table: bookTable, response: response) {
+            next()
+        }
+    }
+    
+    router.delete("/books:id") { request, response, next in
+        guard let idString = request.parameters["id"] else {
+            return
+        }
+        
+        guard let id = Int(idString) else {
+            return
+        }
+        
+        app.deleteSingleFromDatabase(table: bookTable, id: id, response: response) {
+            next()
+        }
     }
     
     app.router.all("/", middleware: router)

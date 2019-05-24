@@ -22,6 +22,85 @@ extension App {
         }
     }
     
+    func deleteSingleFromDatabase(table: BookTable, id: Int, response: RouterResponse, completion: @escaping () -> Void) {
+        
+        App.pool.getConnection() { connection, error in
+            guard let connection = connection else {
+                Log.error("Error connecting: \(error?.localizedDescription ?? "Unkown Error")")
+                let _ = response.send(status: .internalServerError)
+                return
+            }
+            
+            let deleteSingleQuery = Delete(from: table).where(table.id == id)
+            
+            connection.execute(query: deleteSingleQuery) { deleteSingleResult in
+                guard deleteSingleResult.success else {
+                    Log.error("Error executing query: \(deleteSingleResult.asError?.localizedDescription ?? "Unknown Error")")
+                    return
+                }
+                
+                response.status(.OK)
+                return
+            }
+        }
+        
+    }
+    
+    func deleteAllFromDatabase(table: BookTable, response: RouterResponse, completion: @escaping () -> Void) {
+        App.pool.getConnection() { connection, error in
+            guard let connection = connection else {
+                Log.error("Error connecting: \(error?.localizedDescription ?? "Unkown Error")")
+                let _ = response.send(status: .internalServerError)
+                return
+            }
+            
+            let deleteAllQuery = Delete(from: table)
+            
+            connection.execute(query: deleteAllQuery) { deleteAllResult in
+                guard deleteAllResult.success else {
+                    Log.error("Error executing query: \(deleteAllResult.asError?.localizedDescription ?? "Unknown Error")")
+                    return
+                }
+                
+                response.status(.OK)
+                return
+            }
+        }
+    }
+    
+    func patchInDatabase(table: BookTable, id: Int, book: OptionalBook, response: RouterResponse, completion: @escaping () -> Void) {
+        App.pool.getConnection() { connection, error in
+            guard let connection = connection else {
+                Log.error("Error connection: \(error?.localizedDescription ?? "Unknown Error")")
+                let _ = response.send(status: .internalServerError)
+                return
+            }
+            var set: [(Column, Any)] = []
+            
+            if let bookTitle = book.title {
+                set.append((table.title, bookTitle))
+            }
+            if let bookInStock = book.inStock {
+                set.append((table.inStock, bookInStock))
+            }
+            if let bookPrice = book.price {
+                set.append((table.price, bookPrice))
+            }
+            
+            let updateQuery = Update(table, set: set).where(table.id == id)
+            
+            connection.execute(query: updateQuery) { updateResult in
+                guard updateResult.success else {
+                    Log.error("Error executing query: \(updateResult.asError?.localizedDescription ?? "Unknown Error")")
+                    return
+                }
+                
+                response.send(book)
+                return
+            }
+        }
+    }
+    
     func putInDatabase(table: BookTable, id: Int, book: Book, response: RouterResponse, completion: @escaping () -> Void) {
         
         App.pool.getConnection() { connection, error in
@@ -100,7 +179,7 @@ extension App {
                         }
                     }
                     
-                    guard let id = row[0] as? Int32 else {
+                    guard let id = row[0] as? Int else {
                         Log.error("Unable to decode id")
                         let _ = response.send(status: .internalServerError)
                         return
@@ -128,7 +207,7 @@ extension App {
         }
     }
     
-    func getSingleFromDatabase(table: BookTable, id: Int32, response: RouterResponse, completion: () -> Void) {
+    func getSingleFromDatabase(table: BookTable, id: Int, response: RouterResponse, completion: () -> Void) {
         App.pool.getConnection() { connection, error in
             guard let connection = connection else {
                 Log.error("Error connecting: \(error?.localizedDescription ?? "Unknown Error")")
@@ -158,7 +237,7 @@ extension App {
                         }
                     }
                     
-                    guard let id = row[0] as? Int32 else {
+                    guard let id = row[0] as? Int else {
                         Log.error("Unable to decode id")
                         let _ = response.send(status: .internalServerError)
                         return
